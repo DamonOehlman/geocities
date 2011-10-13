@@ -1,0 +1,2 @@
+sauces.blink = function(element) {
+};

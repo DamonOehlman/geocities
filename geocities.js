@@ -935,7 +935,7 @@
 
 Geocities = (function() {
     
-    // include some helpers from tile5
+    // include some helpers from tile5, DOM is included as a hack (will fix)
     var DOM = {};
     /**
     # T5.Animator
@@ -1038,27 +1038,26 @@ Geocities = (function() {
 
     /* internals */
     
-    var effects = {},
-        prefixes = ['-webkit-', '-moz-', '-o-', ''],
+    var defaultEasing = (document.body.dataset || {}).easing || 'linear',
+        defaultSpeed = (document.body.dataset || {}).speed || 1000,
+        effects = {},
+        prefixes = ['-webkit-', '-moz-', '-o-'],
         tweakers = [],
-        hasPrefixes = {
-            transition: true,
-            transform: true
-        },
+        elementCounter = 0,
+        elementTransitions = {},
         reWS = /[\s|\,]+/,
         animator;
     
     effects.blink = function(element, opts) {
         // initialise options
         opts = opts || {};
-        opts.speed = (element.dataset || {}).speed || opts.speed || 500;
         
-        // apply the transition
-        this.applyStyle(element, 'transition', 'opacity ' + (opts.speed / 1000) + 's');
+        // specify that we need a transition on opacity
+        var speed = this.requireTransition('opacity', element),
+            lastTick = 0;
         
-        var lastTick = 0;
         return function(tickCount) {
-            if (tickCount - lastTick > opts.speed) {
+            if (tickCount - lastTick > speed) {
                 element.style.opacity = parseInt(element.style.opacity, 10) ? 0 : 1;
                 lastTick = tickCount;
             } // if
@@ -1080,19 +1079,15 @@ Geocities = (function() {
     effects.spinny = function(element, opts) {
         // initialise options
         opts = opts || {};
-        opts.speed = (element.dataset || {}).speed || opts.speed || 1000;
         
         // get a manipulatable element
-        var effectTarget = this.getAbsolute(element),
+        var speed = this.requireTransition('transform', element),
             lastTick = 0,
             flipped = false;
         
-        // apply the transition
-        this.applyStyle(effectTarget, 'transition', 'all ' + (opts.speed / 1000) + 's');
-            
         return function(tickCount) {
-            if (tickCount - lastTick > opts.speed) {
-                this.applyStyle(effectTarget, 'transform', 'rotateY(' + (flipped ? '-360' : '0') + 'deg )');
+            if (tickCount - lastTick > speed) {
+                this.applyStyle(element, 'transform', 'rotateY(' + (flipped ? '-360' : '0') + 'deg)');
     
                 lastTick = tickCount;
                 flipped = !flipped;
@@ -1101,25 +1096,28 @@ Geocities = (function() {
     };
 
     
-    /* exports */
-    
-    function applyStyle(element, property, value) {
-        var properties = typeof property == 'string' ? [{
-                name: property,
-                value: value
-            }] : properties;
-            
-        _.each(properties, function(propData) {
-            var applyPrefixes = hasPrefixes[propData.name];
-            
-            // iterate through the prefixes and apply the property
-            _.each(applyPrefixes ? prefixes : [], function(prefix) {
-                element.style[prefix + propData.name] = propData.value;
+    function buildTransition(element) {
+        var transitions = elementTransitions[element.id],
+            transitionList = [];
+        
+        // if we have transitions, then create the transition property
+        if (transitions) {
+            // determine the speed
+            var speed = (element.dataset || {}).speed || defaultSpeed,
+                easing = (element.dataset || {}).easing || defaultEasing;
+                
+            // create the transition list
+            _.each(_.uniq(transitions), function(transition) {
+                transitionList.push(transition + ' ' + (speed / 1000) + 's ' + easing);
             });
-        });
-    } // applyStyle
+            
+            // get the unique transitions
+            console.log(transitionList.join(', '));
+            applyStyle(element, 'transition', transitionList.join(','));
+        } // if
+    } // buildTransition
     
-    function getAbsolute(element) {
+    function cloneEl(element) {
         var absElement = element;
         if (element.style.position !== 'absolute') {
             // create a copy of the element
@@ -1138,12 +1136,36 @@ Geocities = (function() {
         
         // return the copied node
         return absElement;
-    } // getAbsolute
+    } // cloneEl    
+    
+    /* exports */
+    
+    function applyStyle(element, property, value) {
+        var properties = typeof property == 'string' ? [{
+                name: property,
+                value: value
+            }] : properties;
+            
+        _.each(properties, function(propData) {
+            var applyPrefixes = typeof element.style[propData.name] == 'undefined';
+            
+            // iterate through the prefixes and apply the property
+            _.each(applyPrefixes ? prefixes : [], function(prefix) {
+                var vendorProp = prefix + propData.name;
+                
+                // if the property is supported then use it
+                if (typeof element.style[vendorProp] != 'undefined') {
+                    element.style[vendorProp] = propData.value;
+                } // if
+            });
+        });
+    } // applyStyle
     
     function makeAwesome() {
         // iterate through the elements and look through the effects in the dataset
         _.each(document.querySelectorAll('[data-effects]'), function(element) {
             var elementEffects = ((element.dataset || {}).effects || '').split(reWS),
+                effectTarget = cloneEl(element),
                 effectIdx, effect;
             
             // iterate through the effects and "sauce up" the element
@@ -1153,11 +1175,42 @@ Geocities = (function() {
                 
                 // if we have an effect, then process the element
                 if (effect) {
-                    tweakers.push(effect.call(_this, element));
+                    tweakers.push(effect.call(_this, effectTarget));
                 } // if
+
+                // build the transition property for the element
+                buildTransition(effectTarget);
             });
         });
     } // makeAwesome
+    
+    function requireTransition(propertyName, element) {
+        var applyPrefixes = typeof element.style[propertyName] == 'undefined';
+        
+        // check that the element has an id
+        element.id = element.id || 'geocities' + elementCounter++;
+        
+        // if we have prefixes on the property, then append the variations
+        if (applyPrefixes) {
+            for (var ii = 0; ii < prefixes.length; ii++) {
+                var vendorPrefix = prefixes[ii] + propertyName;
+                if (typeof element.style[vendorPrefix] != 'undefined') {
+                    propertyName = vendorPrefix;
+                    break;
+                } // if
+            } // for
+        } // if
+        
+        // add the transitionns to the element transitions
+        if (! elementTransitions[element.id]) {
+            elementTransitions[element.id] = [];
+        } // if
+        
+        elementTransitions[element.id].push(propertyName);
+        
+        // return the value of the speed data, because it might be needed by the tweaker
+        return (element.dataset || {}).speed || defaultSpeed;
+    } // requireTransition
     
     // attach the animation loop
     animator = Animator.attach(function(tickCount) {
@@ -1170,8 +1223,8 @@ Geocities = (function() {
     
     var _this = {
         applyStyle: applyStyle,
-        getAbsolute: getAbsolute,
-        makeAwesome: makeAwesome
+        makeAwesome: makeAwesome,
+        requireTransition: requireTransition
     };
     
     return _this;

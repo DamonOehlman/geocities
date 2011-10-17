@@ -933,6 +933,12 @@
 
 
 
+/* 
+-- Geocities.js
+-- Making the web unbeautiful again 
+-- Copyright Damon Oehlman 2011
+-- Released under an MIT license
+*/
 Geocities = (function() {
     
     // include some helpers from tile5, DOM is included as a hack (will fix)

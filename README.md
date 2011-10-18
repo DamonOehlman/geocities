@@ -30,3 +30,6 @@ If you would like to have a play with Geocities.js (and let's be honest, who wou
 ```
 
 ## Available Effects
+
+- blink (configurable via `data-speed`)
+- spinny (configurable via `data-speed`)

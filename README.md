@@ -14,7 +14,23 @@ If you would like to have a play with Geocities.js (and let's be honest, who wou
 can do it by simply including the geocities.js file somewhere in your page, and add
 `data-effects` elements to your page elements.
 
-ERROR: could not find: 
+```html
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+<title>Geocities.js Demos</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<h1 data-effects="spinny">Welcome</h1>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eros <span data-effects="spinny blink">libero</span>, egestas elementum lobortis ut, posuere et nisl. Suspendisse hendrerit massa ac massa mollis mollis. Nunc eleifend lacus ut sem porta sed interdum orci condimentum. Nam lacinia tristique nunc ac hendrerit. Vivamus fermentum pharetra neque ut tincidunt. Nullam tempor viverra nisi, ac condimentum orci blandit eu. Integer at elit purus. Donec eu libero vel orci posuere accumsan. Suspendisse odio arcu, vulputate eu sodales ut, pulvinar nec leo.</p>
+<p>Fusce id odio sollicitudin justo mattis mattis in porttitor lectus. Nullam elementum adipiscing tellus, nec dictum leo hendrerit quis. Vivamus dapibus tellus nec lacus porttitor luctus. Ut vitae risus neque. Aenean consectetur cursus metus a sagittis. In hac habitasse platea dictumst. Vivamus dictum ultrices sodales. Donec sed lacus in diam ultricies tempor. Quisque vel nunc metus, at venenatis massa.</p>
+<div data-effects="spinny" style="position: absolute; width: 200px; height: 200px; background: red;"></div>
+<script src="../dist/geocities.js"></script>
+</body>
+</html>
+
+```
 
 ## Implementation Status
 

@@ -18,7 +18,7 @@ var _ = require('underscore');
   can do it by simply including the geocities.js file somewhere in your page, and add
   `data-effects` elements to your page elements.
 
-  <<< examples/demos/multi.html
+  <<< demos/multi.html
 
   ## Implementation Status
 

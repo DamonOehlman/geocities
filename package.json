@@ -17,6 +17,7 @@
   "homepage": "https://github.com/DamonOehlman/geocities",
   "main": "index.js",
   "scripts": {
+    "build": "browserify --debug index.js > dist/geocities.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -24,5 +25,8 @@
     "blink",
     "marquee"
   ],
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^4"
+  }
 }

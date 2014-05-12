@@ -1,3 +1,0 @@
-//= underscore!
-
-//= geocities.nodeps

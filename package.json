@@ -4,7 +4,8 @@
   "author": "Damon Oehlman <damon.oehlman@gmail.com>",
   "version": "0.0.1",
   "dependencies": {
-    "animator": "^0.2.2"
+    "fdom": "~0.8",
+    "underscore": "^1"
   },
   "repository": {
     "type": "git",

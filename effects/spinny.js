@@ -6,7 +6,7 @@ module.exports = function(element, opts) {
 
   return function(tickCount) {
     if (tickCount - lastTick > speed) {
-      this.applyStyle(element, 'transform', 'rotateY(' + (flipped ? '-360' : '0') + 'deg)');
+      this.applyStyle(element, 'transform', 'rotateY(' + (flipped ? '-180' : '0') + 'deg)');
 
       lastTick = tickCount;
       flipped = !flipped;

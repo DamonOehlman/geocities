@@ -2,7 +2,7 @@
   "name": "geocities",
   "description": "Awesome sauce for the modern web ;)",
   "author": "Damon Oehlman <damon.oehlman@gmail.com>",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "dependencies": {
     "fdom": "~0.8",
     "underscore": "^1"

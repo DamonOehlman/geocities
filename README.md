@@ -32,6 +32,16 @@ can do it by simply including the geocities.js file somewhere in your page, and 
 
 ```
 
+To take one of the demos for a spin, simply start a static file server in
+the cloned repo directory:
+
+```
+git clone https://github.com/DamonOehlman/geocities.git
+cd geocities
+npm install -g st
+st -nc
+```
+
 ## Implementation Status
 
 ### Completed

@@ -20,6 +20,16 @@ var _ = require('underscore');
 
   <<< demos/multi.html
 
+  To take one of the demos for a spin, simply start a static file server in
+  the cloned repo directory:
+
+  ```
+  git clone https://github.com/DamonOehlman/geocities.git
+  cd geocities
+  npm install -g st
+  st -nc
+  ```
+
   ## Implementation Status
 
   ### Completed

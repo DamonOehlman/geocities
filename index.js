@@ -8,6 +8,28 @@ var _ = require('underscore');
 /**
   # geocities.js
 
+  This is a JS library designed to help
+  [progressively enhance](http://www.alistapart.com/articles/understandingprogressiveenhancement)
+  your site with what I like to call some of the _magic of the web_.
+
+  ## Usage
+
+  If you would like to have a play with Geocities.js (and let's be honest, who wouldn't) then you
+  can do it by simply including the geocities.js file somewhere in your page, and add
+  `data-effects` elements to your page elements.
+
+  <<< examples/demos/multi.html
+
+  ## Implementation Status
+
+  ### Completed
+
+  - blink
+  - spinny (horizontal animated flip)
+
+  ### Incomplete
+
+  - marquee
 **/
 
 var defaultEasing = (document.body.dataset || {}).easing || 'linear';

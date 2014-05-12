@@ -18,6 +18,7 @@
   "main": "index.js",
   "scripts": {
     "build": "browserify --debug index.js > dist/geocities.js",
+    "gendocs": "gendocs > README.md",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
